@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -38,6 +38,72 @@ body {
   line-height: 1.6;
   min-height: 100vh;
 }
+
+.project img, 
+.project video {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-bottom: 16px;
+  aspect-ratio: 16 / 9; 
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  inset: 0;
+  background: rgba(5, 10, 20, 0.92);
+  backdrop-filter: blur(15px);
+  padding: 40px 20px;
+  overflow-y: auto;
+}
+
+.modal-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: var(--surface-strong);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+#modalMediaContainer img, 
+#modalMediaContainer video {
+  width: 100%;
+  border-radius: 12px;
+  max-height: 70vh;
+  object-fit: contain;
+  margin-bottom: 20px;
+}
+
+.modal-text h3 {
+  color: var(--brand);
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.modal-text p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.close-modal {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.close-modal:hover { color: var(--brand); }
+
+/* On rend les cards cliquables visuellement */
+.project { cursor: pointer; }
 
 a {
   color: inherit;
@@ -294,20 +360,51 @@ J’aide les marques et entrepreneurs à développer une identité visuelle mode
 
 <div class="project">
 <img src="./img/image.png" alt="">
-<h3>Bannière d'évenement</h3>
+<h3>Bannière d'évenement pour AS'UP</h3>
 <p>Design d'une bannière pour un événement d'entreprise</p>
 </div>
 
 <div class="project">
 <img src="./img/image (1).png" alt="">
-<h3>Post Linkedin</h3>
-<p>Design d'un post pour LinkedIn pour promouvoir le site internet de BFIE</p>
+<h3>Post Linkedin pour BFIE</h3>
+<p>Création d'un post pour LinkedIn pour promouvoir le site internet de BFIE en respectant la charte graphique</p>
 </div>
 
 <div class="project">
 <img src="./img/1749660244553.jpg" alt="">
-<h3>Post Tiktok</h3>
-<p>Création d'une vidéo format TikTok pour Cash Okaz</p>
+<h3>Post Tiktok Cash Okaz</h3>
+<p>Création d'une vidéo format TikTok pour Cash Okaz pour promouvoir leur service de réparation de bijoux</p>
+</div>
+
+<div class="project">
+<img src="./img/lys transport.png" alt="">
+<h3>Refonte complète d'un site internet</h3>
+<p>Refonte du design et de l'expérience utilisateur de Lys Transport</p>
+<a href="https://lys-transport.fr">Voir Plus</a>
+</div>
+
+<div class="project">
+<img src="./img/dours.jpg" alt="">
+<h3>Post Linkedin du Groupe DOURS</h3>
+<p>Création d'un post respectant la charte graphique de l'entreprise Dours, pour promouvoir un de leurs nouveaux projets</p>
+</div>
+
+<div class="project">
+<img src="./img/visuel lys transport.png" alt="">
+<h3>Post Instagram Lys Transport</h3>
+<p>Création d'un post Instagram pour promouvoir le nouveau site de Lys Transport et ses nouvelles fonctionnalités</p>
+</div>
+
+<div class="project">
+<video src="./img/projet after effects 2.mp4" autoplay loop muted playsinline></video>
+<h3>Création d'une animation sur After Effects</h3>
+<p>Création d'une animation d'un phantom sur After Effects</p>
+</div>
+
+<div class="project">
+<img src="./img/Capture d'écran 2026-04-01 115255.png" alt="">
+<h3>Création d'une charte graphique (fictive) pour Pchitt</h3>
+<p>Création d'une charte graphique en moins de 3h pour un partiel blanc</p>
 </div>
 
 </div>
@@ -333,6 +430,57 @@ J’aide les marques et entrepreneurs à développer une identité visuelle mode
 <button id="scrollTop" aria-label="Remonter en haut">
   ▲
 </button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('projectModal');
+  const modalMedia = document.getElementById('modalMediaContainer');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc = document.getElementById('modalDescription');
+  const closeModal = document.querySelector('.close-modal');
+
+  // On attache l'événement à chaque carte
+  document.querySelectorAll('.project').forEach(card => {
+    card.addEventListener('click', () => {
+      // 1. On récupère le contenu de la card
+      const img = card.querySelector('img');
+      const video = card.querySelector('video');
+      const title = card.querySelector('h3').innerText;
+      const desc = card.querySelector('p').innerText;
+
+      // 2. On injecte le média (image ou vidéo)
+      if (img) {
+        modalMedia.innerHTML = `<img src="${img.src}" alt="${title}">`;
+      } else if (video) {
+        modalMedia.innerHTML = `<video src="${video.src}" autoplay loop muted controls></video>`;
+      }
+
+      // 3. On injecte le texte
+      modalTitle.innerText = title;
+      modalDesc.innerText = desc;
+
+      // 4. On affiche la modale
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden'; // Bloque le scroll arrière
+    });
+  });
+
+  // Fermeture
+  closeModal.onclick = () => {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    modalMedia.innerHTML = ''; // Stop la vidéo si elle tourne
+  };
+
+  window.onclick = (event) => {
+    if (event.target == modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+      modalMedia.innerHTML = '';
+    }
+  };
+});
+</script>
 
 <script>
 (function () {
@@ -373,7 +521,22 @@ J’aide les marques et entrepreneurs à développer une identité visuelle mode
   updateActiveLink();
   updateScrollTopButton();
 })();
+
 </script>
+
+
+
+
+<div id="projectModal" class="modal">
+  <span class="close-modal">&times;</span>
+  <div class="modal-content">
+    <div id="modalMediaContainer"></div>
+    <div class="modal-text">
+      <h3 id="modalTitle"></h3>
+      <p id="modalDescription"></p>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
