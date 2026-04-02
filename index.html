@@ -49,6 +49,53 @@ body {
   background: rgba(0, 0, 0, 0.2);
 }
 
+/* Container du slider pour limiter la vue */
+.slider-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+/* Rail qui contient les images alignées */
+.slider-track {
+  display: flex;
+  transition: transform 0.4s ease-in-out;
+  height: 100%;
+}
+
+.slider-track img {
+  min-width: 100%;
+  object-fit: cover;
+  margin-bottom: 0; /* Override de ton style projet global */
+}
+
+/* Style des boutons */
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(11, 18, 33, 0.7);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  transition: 0.3s;
+  z-index: 10;
+}
+
+.slider-btn:hover {
+  background: var(--brand);
+  color: #000;
+}
+
+.prev { left: 10px; }
+.next { right: 10px; }
+
 .modal {
   display: none;
   position: fixed;
@@ -316,10 +363,8 @@ footer {
 <body>
 
 <nav>
-<a href="#about">À propos</a>
 <a href="#skills">Compétences</a>
 <a href="#projects">Projets</a>
-<a href="#contact">Contact</a>
 </nav>
 
 <section class="hero">
@@ -327,13 +372,7 @@ footer {
 <p>Création de visuels modernes et attractifs pour les réseaux sociaux</p>
 </section>
 
-<section id="about">
-<h2>À propos</h2>
-<p>
-Web designer spécialisé dans la création de visuels pour réseaux sociaux, logos, bannières et design de sites web.
-J’aide les marques et entrepreneurs à développer une identité visuelle moderne, professionnelle et impactante pour se démarquer en ligne.
-</p>
-</section>
+
 
 <section id="skills">
 <h2>Compétences</h2>
@@ -405,21 +444,17 @@ J’aide les marques et entrepreneurs à développer une identité visuelle mode
 <img src="./img/Capture d'écran 2026-04-01 115255.png" alt="">
 <h3>Création d'une charte graphique (fictive) pour Pchitt</h3>
 <p>Création d'une charte graphique en moins de 3h pour un partiel blanc</p>
+<a href="charte graphiquePchitt.pdf" target="_blank">Ouvrir le PDF</a>
+</div>
+
+<div class="project">
+<img src="./img/Capture d'écran 2026-04-02 150240.png" alt="">
+<h3>Création d'une charte graphique (fictive) pour Montagem</h3>
+<p>Création d'une charte graphique pour une sous-marque de Montagem pour de nouveaux produits</p>
+<a href="charte graphique.pdf" target="_blank">Ouvrir le PDF</a>
 </div>
 
 </div>
-
-</section>
-
-<section id="contact">
-<h2>Contact</h2>
-
-<form>
-<input type="text" placeholder="Votre nom" required>
-<input type="email" placeholder="Votre email" required>
-<textarea rows="5" placeholder="Votre message"></textarea>
-<button type="submit">Envoyer</button>
-</form>
 
 </section>
 
@@ -480,6 +515,7 @@ J’aide les marques et entrepreneurs à développer une identité visuelle mode
     }
   };
 });
+
 </script>
 
 <script>
@@ -521,6 +557,28 @@ J’aide les marques et entrepreneurs à développer une identité visuelle mode
   updateActiveLink();
   updateScrollTopButton();
 })();
+
+function moveSlider(button, direction) {
+  // Empêche l'ouverture de la modale quand on clique sur les flèches
+  event.stopPropagation();
+
+  const container = button.closest('.slider-container');
+  const track = container.querySelector('.slider-track');
+  const images = track.querySelectorAll('img');
+  const imgWidth = container.offsetWidth;
+  
+  // On récupère l'index actuel via un attribut data ou on le calcule
+  let currentIndex = parseInt(track.dataset.index || 0);
+  
+  currentIndex += direction;
+
+  // Boucle infinie : si on dépasse, on revient au début/fin
+  if (currentIndex >= images.length) currentIndex = 0;
+  if (currentIndex < 0) currentIndex = images.length - 1;
+
+  track.style.transform = `translateX(-${currentIndex * imgWidth}px)`;
+  track.dataset.index = currentIndex;
+}
 
 </script>
 
